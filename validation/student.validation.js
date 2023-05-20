@@ -6,9 +6,9 @@ function validate_user_object(user){
   const schema = Joi.object({
     username: Joi.string().min(3).max(35).required(),
     password: Joi.string().min(8).max(35).required(),
-    email: Joi.string().min(3).max(320).default('not_set'),
+    email: Joi.string().min(3).max(320),
     phone: Joi.string().required().min(10).max(14),
-    gender: Joi.string().min(4).max(8).alphanum().default('not_set'),
+    gender: Joi.string().min(4).max(8).alphanum(),
     picture_url: Joi.string().min(3).max(2048).default('not_set'),
   });
 
