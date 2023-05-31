@@ -1,23 +1,23 @@
-const validate_student = require("../validation/student.validation");
-const student_module = require("../modules/student_module");
+const validate_question = require("../validation/question.validation");
+const question_module = require("../modules/question_module");
 
 
-// get all student api
+// get all question api
 exports.getAll = async (req, res) => {
 
-  const result = await student_module.getAll();
+  const result = await question_module.getAll();
 
   // console.log(result);
   res.send(result);
 
 };
 
-// get a student by id api
+// get a question by id api
 exports.getById = async (req, res) => {
   const id = req.params.id;
 
   // validate if id is correct
-  const {error} = validate_student.validate_user_id(id);
+  const {error} = validate_question.validate_user_id(id);
 
   if (error) {
     console.log(error.details[0].message);
@@ -25,17 +25,18 @@ exports.getById = async (req, res) => {
     return;
   }
 
-  // create the student inside the database
-  const result = await student_module.getById(id);
-  console.log(result);
+  // create the question inside the database
+  const result = await question_module.getById(id);
+  // console.log(result);
+  console.log(`returned question with id: ${id}`)
 
   res.send(result);
 };
 
-// insert a student into the database
+// insert a question into the database
 exports.createOne = async (req, res) => {
   // validate the req.body object
-  const {error, value} = validate_student.validate_user_object(req.body);
+  const {error, value} = validate_question.validate_user_object(req.body);
 
   //check if error exists
   if (error) {
@@ -44,26 +45,26 @@ exports.createOne = async (req, res) => {
     return;
   }
 
-  const student = value;
-  // console.log(student);
+  const question = value;
+  // console.log(question);
 
-  // insert the student into the database
-  const result = await student_module.createOne(student);
+  // insert the question into the database
+  const result = await question_module.createOne(question);
 
-  console.log(`student created with id: ${result.insertId}`);
+  console.log(`question created with id: ${result.insertId}`);
   res.send(result);
 };
 
-// update a student based on it's id 
+// update a question based on it's id 
 exports.updateByID = async(req, res) => {
 
   const id = req.params.id;
 
   // validate the req.body object
-  const result1 = validate_student.validate_user_object(req.body);
+  const result1 = validate_question.validate_user_object(req.body);
 
   // validate if id is correct
-  const result2 = validate_student.validate_user_id(req.params.id);
+  const result2 = validate_question.validate_user_id(req.params.id);
 
   // console.log(req.params.id);
 
@@ -80,11 +81,11 @@ exports.updateByID = async(req, res) => {
     return;
   }
 
-  const student = result1.value;
+  const question = result1.value;
   
   // update the user inside the database
-  const result = await student_module.updateByID(id,student);
-  console.log(`student updated with id: ${id}`);
+  const result = await question_module.updateByID(id,question);
+  console.log(`question updated with id: ${id}`);
   res.send(result);
 
 };
@@ -93,7 +94,7 @@ exports.updateByID = async(req, res) => {
 //   const id = req.params.id;
 
 //   // validate if id is correct
-//   const {error} = validate_student.validate_user_id(id);
+//   const {error} = validate_question.validate_user_id(id);
 
 //   if (error) {
 //     console.log(error.details[0].message);
@@ -101,9 +102,9 @@ exports.updateByID = async(req, res) => {
 //     return;
 //   }
 
-//   // delete the student inside the database
-//   const result = await student_module.deleteByID(id);
-//   console.log(`student deleted with id: ${id}`);
+//   // delete the question inside the database
+//   const result = await question_module.deleteByID(id);
+//   console.log(`question deleted with id: ${id}`);
 //   res.send(result);
 
 // };

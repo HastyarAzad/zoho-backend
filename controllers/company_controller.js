@@ -1,23 +1,23 @@
-const validate_student = require("../validation/student.validation");
-const student_module = require("../modules/student_module");
+const validate_company = require("../validation/company.validation");
+const company_module = require("../modules/company_module");
 
 
-// get all student api
+// get all company api
 exports.getAll = async (req, res) => {
 
-  const result = await student_module.getAll();
+  const result = await company_module.getAll();
 
   // console.log(result);
   res.send(result);
 
 };
 
-// get a student by id api
+// get a company by id api
 exports.getById = async (req, res) => {
   const id = req.params.id;
 
   // validate if id is correct
-  const {error} = validate_student.validate_user_id(id);
+  const {error} = validate_company.validate_user_id(id);
 
   if (error) {
     console.log(error.details[0].message);
@@ -25,17 +25,17 @@ exports.getById = async (req, res) => {
     return;
   }
 
-  // create the student inside the database
-  const result = await student_module.getById(id);
+  // create the company inside the database
+  const result = await company_module.getById(id);
   console.log(result);
 
   res.send(result);
 };
 
-// insert a student into the database
+// insert a company into the database
 exports.createOne = async (req, res) => {
   // validate the req.body object
-  const {error, value} = validate_student.validate_user_object(req.body);
+  const {error, value} = validate_company.validate_user_object(req.body);
 
   //check if error exists
   if (error) {
@@ -44,26 +44,26 @@ exports.createOne = async (req, res) => {
     return;
   }
 
-  const student = value;
-  // console.log(student);
+  const company = value;
+  // console.log(company);
 
-  // insert the student into the database
-  const result = await student_module.createOne(student);
+  // insert the company into the database
+  const result = await company_module.createOne(company);
 
-  console.log(`student created with id: ${result.insertId}`);
+  console.log(`company created with id: ${result.insertId}`);
   res.send(result);
 };
 
-// update a student based on it's id 
+// update a company based on it's id 
 exports.updateByID = async(req, res) => {
 
   const id = req.params.id;
 
   // validate the req.body object
-  const result1 = validate_student.validate_user_object(req.body);
+  const result1 = validate_company.validate_user_object(req.body);
 
   // validate if id is correct
-  const result2 = validate_student.validate_user_id(req.params.id);
+  const result2 = validate_company.validate_user_id(req.params.id);
 
   // console.log(req.params.id);
 
@@ -80,11 +80,11 @@ exports.updateByID = async(req, res) => {
     return;
   }
 
-  const student = result1.value;
+  const company = result1.value;
   
   // update the user inside the database
-  const result = await student_module.updateByID(id,student);
-  console.log(`student updated with id: ${id}`);
+  const result = await company_module.updateByID(id,company);
+  console.log(`company updated with id: ${id}`);
   res.send(result);
 
 };
@@ -93,7 +93,7 @@ exports.updateByID = async(req, res) => {
 //   const id = req.params.id;
 
 //   // validate if id is correct
-//   const {error} = validate_student.validate_user_id(id);
+//   const {error} = validate_company.validate_user_id(id);
 
 //   if (error) {
 //     console.log(error.details[0].message);
@@ -101,9 +101,9 @@ exports.updateByID = async(req, res) => {
 //     return;
 //   }
 
-//   // delete the student inside the database
-//   const result = await student_module.deleteByID(id);
-//   console.log(`student deleted with id: ${id}`);
+//   // delete the company inside the database
+//   const result = await company_module.deleteByID(id);
+//   console.log(`company deleted with id: ${id}`);
 //   res.send(result);
 
 // };

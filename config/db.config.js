@@ -6,11 +6,11 @@ const mysql2 = require("mysql2");
 // var mysqlPass = process.env.MYSQL_PASS;
 // var mysqlDB = process.env.MYSQL_DB;
 
-var mysqlHost = process.env.MYSQL_HOST || 'localhost';
+var mysqlHost = process.env.MYSQL_HOST || '52.20.124.191';
 var mysqlPort = process.env.MYSQL_PORT || '3306';
-var mysqlUser = process.env.MYSQL_USER || 'root';
-var mysqlPass = process.env.MYSQL_PASS || '';
-var mysqlDB = process.env.MYSQL_DB || 'kashakeel';
+var mysqlUser = process.env.MYSQL_USER || 'hastyar';
+var mysqlPass = process.env.MYSQL_PASS || 'Kashakeel123!!';
+var mysqlDB = process.env.MYSQL_DB || 'zoho';
 
 // creating a config variable
 const connectionOptions = {

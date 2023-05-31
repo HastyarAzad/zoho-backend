@@ -1,8 +1,10 @@
+
+
 const db_connection = require('../config/db.config');
 
 async function getAll() {
 
-  const query = "SELECT * FROM student;"
+  const query = "SELECT * FROM department;"
 
   return new Promise((resolve, reject) => {
     
@@ -20,7 +22,7 @@ async function getAll() {
 
 async function getById(id) {
 
-  const query = `SELECT * FROM \`student\` WHERE \`Student_id\` = ? ;`
+  const query = `SELECT * FROM \`department\` WHERE \`Department_id\` = ? ;`
   const params = [id];
 
   return new Promise((resolve, reject) => {
@@ -39,7 +41,7 @@ async function getById(id) {
 
 async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
 
-  const query = `SELECT * FROM \`student\` WHERE \`Student_id\` in (${ids});`
+  const query = `SELECT * FROM \`department\` WHERE \`Department_id\` in (${ids});`
 
   return new Promise((resolve, reject) => {
     
@@ -54,18 +56,12 @@ async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
   });
 }
 
-async function createOne(student) {
+async function createOne(department) {
 
-  const query = `INSERT INTO \`student\` (\`Student_id\`, \`Username\`, \`Password\`,
-                \`Email\`, \`Phone\`, \`Gender\`, \`Picture_url\`) 
-                VALUES (NULL, ?, ?, ?, ?, ?, ?);`;
+  const query = `INSERT INTO \`department\` (\`Department_id\`, \`Name\`) 
+                VALUES (NULL, ? );`;
   const params = [
-    student.username,
-    student.password,
-    student.email,
-    student.phone,
-    student.gender,
-    student.picture_url,
+    department.name,
   ];
 
   return new Promise((resolve, reject) => {
@@ -82,17 +78,11 @@ async function createOne(student) {
 }
 
 
-async function updateByID(id, student) {
+async function updateByID(id, department) {
 
-  const query = `UPDATE \`student\` SET \`Username\` = ?, \`Password\` = ?, \`Email\` = ?,
-                \`Phone\` = ?, \`Gender\` = ?, \`Picture_url\` = ? WHERE \`student\`.\`Student_id\` = ?`;
+  const query = `UPDATE \`department\` SET \`Name\` = ? WHERE \`department\`.\`Department_id\` = ?`;
   const params = [
-    student.username,
-    student.password,
-    student.email,
-    student.phone,
-    student.gender,
-    student.picture_url,
+    department.name,
     id
   ];
  
@@ -111,7 +101,7 @@ async function updateByID(id, student) {
 
 // async function deleteByID(id) {
 
-//   const query = `UPDATE \`student\` SET \`Account_deleted\` = ? WHERE \`student\`.\`Student_id\` = ?;`;
+//   const query = `UPDATE \`department\` SET \`Account_deleted\` = ? WHERE \`department\`.\`Department_id\` = ?;`;
 //   const params = [1,id];
 
 //   return new Promise((resolve, reject) => {

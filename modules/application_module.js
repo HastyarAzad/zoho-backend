@@ -1,8 +1,10 @@
+
+
 const db_connection = require('../config/db.config');
 
 async function getAll() {
 
-  const query = "SELECT * FROM student;"
+  const query = "SELECT * FROM application;"
 
   return new Promise((resolve, reject) => {
     
@@ -20,7 +22,7 @@ async function getAll() {
 
 async function getById(id) {
 
-  const query = `SELECT * FROM \`student\` WHERE \`Student_id\` = ? ;`
+  const query = `SELECT * FROM \`application\` WHERE \`Application_id\` = ? ;`
   const params = [id];
 
   return new Promise((resolve, reject) => {
@@ -39,7 +41,7 @@ async function getById(id) {
 
 async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
 
-  const query = `SELECT * FROM \`student\` WHERE \`Student_id\` in (${ids});`
+  const query = `SELECT * FROM \`application\` WHERE \`Application_id\` in (${ids});`
 
   return new Promise((resolve, reject) => {
     
@@ -54,18 +56,14 @@ async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
   });
 }
 
-async function createOne(student) {
+async function createOne(application) {
 
-  const query = `INSERT INTO \`student\` (\`Student_id\`, \`Username\`, \`Password\`,
-                \`Email\`, \`Phone\`, \`Gender\`, \`Picture_url\`) 
-                VALUES (NULL, ?, ?, ?, ?, ?, ?);`;
+  const query = `INSERT INTO \`application\` (\`Application_id\`, \`Job_id\`, \`Student_id\`, \`Cv_link\`) 
+                VALUES (NULL, ?, ?, ?);`;
   const params = [
-    student.username,
-    student.password,
-    student.email,
-    student.phone,
-    student.gender,
-    student.picture_url,
+    application.job_id,
+    application.student_id,
+    application.cv_link
   ];
 
   return new Promise((resolve, reject) => {
@@ -81,18 +79,13 @@ async function createOne(student) {
   });
 }
 
+async function updateByID(id, application) {
 
-async function updateByID(id, student) {
-
-  const query = `UPDATE \`student\` SET \`Username\` = ?, \`Password\` = ?, \`Email\` = ?,
-                \`Phone\` = ?, \`Gender\` = ?, \`Picture_url\` = ? WHERE \`student\`.\`Student_id\` = ?`;
+  const query = `UPDATE \`application\` SET \`Job_id\` = ?, \`Student_id\` = ? ,\`Cv_link\` = ? WHERE \`application\`.\`Application_id\` = ?`;
   const params = [
-    student.username,
-    student.password,
-    student.email,
-    student.phone,
-    student.gender,
-    student.picture_url,
+    application.job_id,
+    application.student_id,
+    application.cv_link,
     id
   ];
  
@@ -111,7 +104,7 @@ async function updateByID(id, student) {
 
 // async function deleteByID(id) {
 
-//   const query = `UPDATE \`student\` SET \`Account_deleted\` = ? WHERE \`student\`.\`Student_id\` = ?;`;
+//   const query = `UPDATE \`application\` SET \`Account_deleted\` = ? WHERE \`application\`.\`application_id\` = ?;`;
 //   const params = [1,id];
 
 //   return new Promise((resolve, reject) => {
