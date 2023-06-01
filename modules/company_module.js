@@ -38,6 +38,42 @@ async function getById(id) {
   });
 }
 
+async function getByEmail(email) {
+
+  const query = `SELECT * FROM \`company\` WHERE \`Email\` = ? ;`
+  const params = [email];
+
+  return new Promise((resolve, reject) => {
+
+    db_connection.query(query, params, (err, result) => {
+      if (err) {
+        console.log(err);
+        resolve(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
+
+// check if the email and password are correct
+async function login(email, password) {
+
+  const query = `SELECT * FROM \`company\` WHERE \`Email\` = ? AND \`Password\` = ?;`
+  const params = [email, password];
+
+  return new Promise((resolve, reject) => {
+
+    db_connection.query(query, params, (err, result) => {
+      if (err) {
+        console.log(err);
+        resolve(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
 
 async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
 
@@ -133,6 +169,8 @@ async function updateByID(id, company) {
 
 module.exports.getAll = getAll;
 module.exports.getById = getById;
+module.exports.getByEmail = getByEmail;
+module.exports.login = login;
 module.exports.getByIds = getByIds;
 module.exports.createOne = createOne;
 module.exports.updateByID = updateByID;

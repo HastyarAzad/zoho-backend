@@ -17,6 +17,18 @@ function validate_user_object(user){
   return schema.validate(user);
 }
 
+// validate the user's email
+function validate_user_email(email){
+  // creating a schema for the user
+  const schema = Joi.object({
+    email: Joi.string().required().min(3).max(320),
+  });
+
+  // validating and returning the joi object
+  return schema.validate({ email: email });
+}
+
+
 // to validate the user's id
 function validate_user_id(id){
   // creating a schema for the user
@@ -39,5 +51,6 @@ function validate_user_password(password){
 }
 
 module.exports.validate_user_id = validate_user_id;
+module.exports.validate_user_email = validate_user_email;
 module.exports.validate_user_object = validate_user_object;
 module.exports.validate_user_password = validate_user_password;

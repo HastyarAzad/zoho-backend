@@ -9,6 +9,9 @@ router.get("/students", student_controller.getAll);
 // get a student by id api
 router.get("/student/:id", student_controller.getById);
 
+// get a student by id api
+router.get("/student_by_email/:email", student_controller.getByEmail);
+
 // insert a student into the database
 router.post("/student", student_controller.createOne);
 

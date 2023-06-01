@@ -9,6 +9,9 @@ router.get("/companies", company_controller.getAll);
 // get a company by id api
 router.get("/company/:id", company_controller.getById);
 
+// get a company by email api
+router.get("/company_by_email/:email", company_controller.getByEmail);
+
 // insert a company into the database
 router.post("/company", company_controller.createOne);
 

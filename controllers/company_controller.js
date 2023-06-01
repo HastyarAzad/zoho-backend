@@ -32,6 +32,32 @@ exports.getById = async (req, res) => {
   res.send(result);
 };
 
+// get a company by email api
+exports.getByEmail = async (req, res) => {
+  const email = req.params.email;
+
+  // validate if email is correct
+  const {error} = validate_company.validate_user_email(email);
+
+  if (error) {
+    console.log(error.details[0].message);
+    res.status(404).send(error.details[0].message);
+    return;
+  }
+
+  // check if email exists in the database
+  const result = await company_module.getByEmail(email);
+  console.log(result);
+
+  // if email does not exist in the database
+  if (result.length === 0) {
+    res.status(404).send({error: "company not found"});
+    return;
+  }
+
+  res.send({message: "company found"});
+};
+
 // insert a company into the database
 exports.createOne = async (req, res) => {
   // validate the req.body object

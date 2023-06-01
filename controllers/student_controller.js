@@ -32,6 +32,33 @@ exports.getById = async (req, res) => {
   res.send(result);
 };
 
+// get a student by email api
+exports.getByEmail = async (req, res) => {
+  const email = req.params.email;
+
+  // validate if email is correct
+  const {error} = validate_student.validate_user_email(email);
+
+  if (error) {
+    console.log(error.details[0].message);
+    res.status(404).send(error.details[0].message);
+    return;
+  }
+
+  // check if email exists in the database
+  const result = await student_module.getByEmail(email);
+  console.log(result);
+
+  // check the result and send the response
+  if (result.length === 0) {
+    res.status(404).send({error: "student not found"});
+    return;
+  }
+
+  res.send({message: "student found"});
+};
+
+
 // insert a student into the database
 exports.createOne = async (req, res) => {
   // validate the req.body object
