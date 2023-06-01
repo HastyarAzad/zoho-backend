@@ -33,6 +33,26 @@ exports.getById = async (req, res) => {
   res.send(result);
 };
 
+// get a question by job id api
+exports.getByJobId = async (req, res) => {
+  const id = req.params.id;
+
+  // validate if id is correct
+  const {error} = validate_question.validate_user_id(id);
+
+  if (error) {
+    console.log(error.details[0].message);
+    res.status(404).send(error.details[0].message);
+    return;
+  }
+
+  // get all the questions inside the database for the job id
+  const result = await question_module.getByJobId(id);
+  // console.log(result);
+  console.log(`returned questions with job id: ${id}`)
+  res.send(result);
+};
+
 // insert a question into the database
 exports.createOne = async (req, res) => {
   // validate the req.body object

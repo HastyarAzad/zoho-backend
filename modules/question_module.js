@@ -38,6 +38,25 @@ async function getById(id) {
   });
 }
 
+// get by job id
+async function getByJobId(id) {
+
+  const query = `SELECT * FROM \`question\` WHERE \`Job_id\` = ? ;`
+  const params = [id];
+
+  return new Promise((resolve, reject) => {
+
+    db_connection.query(query, params, (err, result) => {
+      if (err) {
+        console.log(err);
+        resolve(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
+
 
 async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
 
@@ -122,6 +141,7 @@ async function updateByID(id, question) {
 
 module.exports.getAll = getAll;
 module.exports.getById = getById;
+module.exports.getByJobId = getByJobId;
 module.exports.getByIds = getByIds;
 module.exports.createOne = createOne;
 module.exports.updateByID = updateByID;

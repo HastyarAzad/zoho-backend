@@ -9,6 +9,9 @@ router.get("/questions", question_controller.getAll);
 // get a question by id api
 router.get("/question/:id", question_controller.getById);
 
+// get a question by job id api
+router.get("/questions_for_job/:id", question_controller.getByJobId);
+
 // insert a question into the database
 router.post("/question", question_controller.createOne);
 
