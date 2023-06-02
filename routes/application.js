@@ -9,6 +9,12 @@ router.get("/applications", application_controller.getAll);
 // get a application by id api
 router.get("/application/:id", application_controller.getById);
 
+// get a application by company_id api
+router.get("/applications_for_company/:id", application_controller.getByCompanyId);
+
+// get a application by job_id api
+router.get("/applications_for_job/:id", application_controller.getByJobId);
+
 // insert a application into the database
 router.post("/application", application_controller.createOne);
 

@@ -38,6 +38,44 @@ async function getById(id) {
   });
 }
 
+// get all applications by company_id api
+async function getByCompanyId(id) {
+
+  const query = `SELECT * FROM \`application\` WHERE \`Job_id\` in (SELECT \`Job_id\` FROM \`job\` WHERE \`Company_id\` = ?);` // get all jobs by company_id then get all applications by job_id
+  const params = [id];
+
+  return new Promise((resolve, reject) => {
+
+    db_connection.query(query, params, (err, result) => {
+      if (err) {
+        console.log(err);
+        resolve(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
+
+// get all applications by job_id api
+async function getByJobId(id) {
+
+  const query = `SELECT * FROM \`application\` WHERE \`Job_id\` = ? ;`
+  const params = [id];
+
+  return new Promise((resolve, reject) => {
+
+    db_connection.query(query, params, (err, result) => {
+      if (err) {
+        console.log(err);
+        resolve(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
+
 
 async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
 
@@ -122,6 +160,8 @@ async function updateByID(id, application) {
 
 module.exports.getAll = getAll;
 module.exports.getById = getById;
+module.exports.getByCompanyId = getByCompanyId;
+module.exports.getByJobId = getByJobId;
 module.exports.getByIds = getByIds;
 module.exports.createOne = createOne;
 module.exports.updateByID = updateByID;

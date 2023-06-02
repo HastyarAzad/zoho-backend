@@ -9,6 +9,9 @@ router.get("/jobs", job_controller.getAll);
 // get a job by id api
 router.get("/job/:id", job_controller.getById);
 
+// get a job by company_id api
+router.get("/jobs_for_company/:id", job_controller.getByCompanyId);
+
 // insert a job into the database
 router.post("/job", job_controller.createOne);
 

@@ -33,6 +33,48 @@ exports.getById = async (req, res) => {
   res.send(result);
 };
 
+// get a application by company_id api
+exports.getByCompanyId = async (req, res) => {
+
+  const id = req.params.id;
+
+  // validate if id is correct
+  const {error} = validate_application.validate_user_id(id);
+
+  if (error) {
+    console.log(error.details[0].message);
+    res.status(404).send(error.details[0].message);
+    return;
+  }
+
+  // get all the applications for that company from the database
+  const result = await application_module.getByCompanyId(id);
+  // console.log(result);
+  console.log(`returned all applications with company_id: ${id}`)
+  res.send(result);
+};
+
+// get a application by job_id api
+exports.getByJobId = async (req, res) => {
+
+  const id = req.params.id;
+
+  // validate if id is correct
+  const {error} = validate_application.validate_user_id(id);
+
+  if (error) {
+    console.log(error.details[0].message);
+    res.status(404).send(error.details[0].message);
+    return;
+  }
+
+  // get all the applications for that job from the database
+  const result = await application_module.getByJobId(id);
+  // console.log(result);
+  console.log(`returned all applications with job_id: ${id}`)
+  res.send(result);
+};
+
 // insert a application into the database
 exports.createOne = async (req, res) => {
   // validate the req.body object
