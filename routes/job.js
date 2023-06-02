@@ -12,6 +12,9 @@ router.get("/job/:id", job_controller.getById);
 // get a job by company_id api
 router.get("/jobs_for_company/:id", job_controller.getByCompanyId);
 
+// filter jobs by request params
+router.get("/filter_jobs", job_controller.getByParams);
+
 // insert a job into the database
 router.post("/job", job_controller.createOne);
 

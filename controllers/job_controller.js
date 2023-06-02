@@ -54,6 +54,45 @@ exports.getByCompanyId = async (req, res) => {
   res.send(result);
 };
 
+// get jobs by params
+exports.getByParams = async (req, res) => {
+  const params = req.query;
+
+  // Initialize a base query
+  let query = 'SELECT * FROM jobs';
+
+  // Check if any parameters exist
+  const keys = Object.keys(params);
+  if (keys.length) {
+    query += ' WHERE';
+    
+    keys.forEach((key, i) => {
+      // If it's not the first condition, prepend "AND"
+      if (i !== 0) query += ' AND';
+      
+      // Add condition to the query
+      query += ` ${key} = ?`;
+    });
+  }
+
+  console.log(query);
+  console.log(Object.values(params));
+  res.send("ok");
+
+  // // Connect to the database and execute the query
+  // try {
+  //   let connection = await mysql.createConnection(DB_CONFIG);
+
+  //   const [rows, fields] = await connection.execute(query, Object.values(params));
+
+  //   res.status(200).json(rows);
+  // } catch (err) {
+  //   console.error(err);
+  //   res.status(500).json({error: "An error occurred while retrieving jobs"});
+  // }
+};
+
+
 // insert a job into the database
 exports.createOne = async (req, res) => {
   // validate the req.body object
