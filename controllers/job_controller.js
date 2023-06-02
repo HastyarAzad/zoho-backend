@@ -59,7 +59,7 @@ exports.getByParams = async (req, res) => {
   const params = req.query;
 
   // Initialize a base query
-  let query = 'SELECT * FROM jobs';
+  let query = 'SELECT * FROM job';
 
   // Check if any parameters exist
   const keys = Object.keys(params);
@@ -68,24 +68,37 @@ exports.getByParams = async (req, res) => {
     query += ' WHERE';
     
     keys.forEach((key, i) => {
+      if (key === 'search') {
+        // If search key is present, we'll add a LIKE clause
+        if (i !== 0) query += ' AND';
+        query += ` (title LIKE ?`;
+        query += ` OR description LIKE ?)`;
+        // params[key] = params[key];
+        parameters.push(params[key]); 
+        parameters.push(params[key]);
+      } else {
 
-      // if key is equal to 0.0 or '' then skip
-      if (params[key] === '0.0' || params[key] === '') return;
+        // if key is equal to 0.0 or '' then skip
+        if (params[key] === '0.0' || params[key] === '') return;
 
-      // add the parameter to the parameters array
-      parameters.push(params[key]);
+        // add the parameter to the parameters array
+        parameters.push(params[key]);
 
-      // If it's not the first condition, prepend "AND"
-      if (i !== 0) query += ' AND';
-      
-      // Add condition to the query
-      query += ` ${key} = ?`;
+        // If it's not the first condition, prepend "AND"
+        if (i !== 0) query += ' AND';
+        
+        // Add condition to the query
+        query += ` ${key} = ?`;
+      }
     });
   }
 
   console.log(query);
-  console.log(parameters);
-  res.send("ok");
+
+  // send the query and parameters to the job_module
+  const result = await job_module.getByParams(query, parameters);
+
+  res.send(result);
 
   // // Connect to the database and execute the query
   // try {
