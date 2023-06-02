@@ -63,10 +63,18 @@ exports.getByParams = async (req, res) => {
 
   // Check if any parameters exist
   const keys = Object.keys(params);
+  let parameters = [];
   if (keys.length) {
     query += ' WHERE';
     
     keys.forEach((key, i) => {
+
+      // if key is equal to 0.0 or '' then skip
+      if (params[key] === '0.0' || params[key] === '') return;
+
+      // add the parameter to the parameters array
+      parameters.push(params[key]);
+
       // If it's not the first condition, prepend "AND"
       if (i !== 0) query += ' AND';
       
@@ -76,7 +84,7 @@ exports.getByParams = async (req, res) => {
   }
 
   console.log(query);
-  console.log(Object.values(params));
+  console.log(parameters);
   res.send("ok");
 
   // // Connect to the database and execute the query
