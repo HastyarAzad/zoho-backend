@@ -38,6 +38,24 @@ async function getById(id) {
   });
 }
 
+// get companies by ids
+async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
+
+  const query = `SELECT * FROM \`company\` WHERE \`Company_id\` in (${ids});`
+
+  return new Promise((resolve, reject) => {
+
+    db_connection.query(query, (err, result) => {
+      if (err) {
+        console.log(err);
+        resolve(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
+
 async function getByEmail(email) {
 
   const query = `SELECT * FROM \`company\` WHERE \`Email\` = ? ;`

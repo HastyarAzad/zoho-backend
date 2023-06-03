@@ -32,6 +32,24 @@ exports.getById = async (req, res) => {
   res.send(result);
 };
 
+// get by ids api
+exports.getByIds = async (req, res) => {
+  const ids = req.body.ids;
+
+  if(!ids){
+    res.status(404).send({error: "ids not found"});
+    return;
+  }
+
+  const my_ids = [... new Set(ids)].toString();
+
+  // get all the companies from the database
+  const result = await company_module.getByIds(ids);
+  console.log(result);
+
+  res.send(result);
+};
+
 // get a company by email api
 exports.getByEmail = async (req, res) => {
   const email = req.params.email;
