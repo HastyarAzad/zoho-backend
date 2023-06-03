@@ -64,33 +64,32 @@ exports.getByParams = async (req, res) => {
   // Check if any parameters exist
   const keys = Object.keys(params);
   let parameters = [];
+  let isFirstCondition = true;
   if (keys.length) {
-    query += ' WHERE';
-    
     keys.forEach((key, i) => {
+      // if key is equal to 0.0 or '' then skip
+      if (params[key] === '0.0' || params[key] === '') return;
+      
+      if (!isFirstCondition) query += ' AND';  // Prepend "AND" only if it's not the first condition
+
       if (key === 'search') {
         // If search key is present, we'll add a LIKE clause
-        if (i !== 0) query += ' AND';
         query += ` (title LIKE ?`;
         query += ` OR description LIKE ?)`;
-        // params[key] = params[key];
-        parameters.push(params[key]); 
-        parameters.push(params[key]);
+        // add '%' to the beginning and end of the search term for SQL LIKE clause
+        parameters.push('%' + params[key] + '%');
+        parameters.push('%' + params[key] + '%');
       } else {
-
-        // if key is equal to 0.0 or '' then skip
-        if (params[key] === '0.0' || params[key] === '') return;
-
-        // add the parameter to the parameters array
-        parameters.push(params[key]);
-
-        // If it's not the first condition, prepend "AND"
-        if (i !== 0) query += ' AND';
-        
         // Add condition to the query
         query += ` ${key} = ?`;
+        parameters.push(params[key]);  // add the parameter to the parameters array
       }
+
+      isFirstCondition = false;  // Update the flag to indicate that the first condition has been added
     });
+
+    // Add WHERE clause only if there are any conditions
+    if (!isFirstCondition) query = 'SELECT * FROM job WHERE ' + query.slice(18);
   }
 
   console.log(query);
@@ -99,19 +98,8 @@ exports.getByParams = async (req, res) => {
   const result = await job_module.getByParams(query, parameters);
 
   res.send(result);
-
-  // // Connect to the database and execute the query
-  // try {
-  //   let connection = await mysql.createConnection(DB_CONFIG);
-
-  //   const [rows, fields] = await connection.execute(query, Object.values(params));
-
-  //   res.status(200).json(rows);
-  // } catch (err) {
-  //   console.error(err);
-  //   res.status(500).json({error: "An error occurred while retrieving jobs"});
-  // }
 };
+
 
 
 // insert a job into the database
