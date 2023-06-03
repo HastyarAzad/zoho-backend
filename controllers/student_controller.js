@@ -58,6 +58,23 @@ exports.getByEmail = async (req, res) => {
   res.send({message: "student found"});
 };
 
+// get by ids api
+exports.getByIds = async (req, res) => {
+  const ids = req.body.ids;
+
+  if(!ids){
+    res.status(404).send({error: "ids not found"});
+    return;
+  }
+
+  const my_ids = [... new Set(ids)].toString();
+
+  // get all the students from the database
+  const result = await student_module.getByIds(ids);
+  console.log(result);
+
+  res.send(result);
+};
 
 // insert a student into the database
 exports.createOne = async (req, res) => {
