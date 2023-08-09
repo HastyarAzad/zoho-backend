@@ -93,8 +93,8 @@ async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
 
 async function createOne(job) {
 
-  const query = `INSERT INTO \`job\` (\`job_id\`, \`Title\`, \`Description\`, \`Company_id\`, \`Type\`, \`Gender\`, \`Expiration\`, \`Department_id\`) 
-                VALUES (NULL, ? , ? , ? , ? , ? , ? , ?);`;
+  const query = `INSERT INTO \`job\` (\`job_id\`, \`Title\`, \`Description\`, \`Company_id\`, \`Type\`, \`Gender\`, \`Expiration\`, \`Department_id\`, \`Skills\`) 
+                VALUES (NULL, ? , ? , ? , ? , ? , ? , ? , ? );`;
   const params = [
     job.title,
     job.description,
@@ -102,7 +102,8 @@ async function createOne(job) {
     job.type,
     job.gender,
     job.expiration,
-    job.department_id
+    job.department_id,
+    job.skills
   ];
 
   return new Promise((resolve, reject) => {
@@ -124,7 +125,7 @@ async function updateByID(id, job) {
 
   const query = `UPDATE \`job\` SET \`Title\` = ?, \`Description\` = ?,
                 \`Company_id\` = ?, \`Type\` = ?, \`Gender\` = ?, \`Expiration\` = ?, 
-                \`Department_id\` = ? WHERE \`job\`.\`Job_id\` = ?;`;
+                \`Department_id\` = ?, \`Skills\` = ? WHERE \`job\`.\`Job_id\` = ?;`;
   const params = [
     job.title,
     job.description,
@@ -133,6 +134,7 @@ async function updateByID(id, job) {
     job.gender,
     job.expiration,
     job.department_id,
+    job.skills,
     id
   ];
  

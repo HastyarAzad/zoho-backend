@@ -11,6 +11,7 @@ function validate_user_object(user){
     gender: Joi.string().min(3).max(35).required(),
     expiration: Joi.string().min(3).max(35).required(),
     department_id: Joi.number().required().min(0),
+    skills: Joi.string().min(0).max(500).required(),
   });
 
   //validating the request body and returning the result

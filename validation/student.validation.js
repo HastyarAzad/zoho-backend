@@ -10,6 +10,8 @@ function validate_user_object(user){
     phone: Joi.string().required().min(10).max(14),
     gender: Joi.string().min(4).max(8).alphanum(),
     picture_url: Joi.string().min(3).max(2048).default('not_set'),
+    skills: Joi.string().min(0).max(500).required(),
+    description: Joi.string().min(0).max(500).required(),
   });
 
   //validating the request body and returning the result

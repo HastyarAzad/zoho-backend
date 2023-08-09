@@ -93,8 +93,8 @@ async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
 async function createOne(student) {
 
   const query = `INSERT INTO \`student\` (\`Student_id\`, \`Username\`, \`Password\`,
-                \`Email\`, \`Phone\`, \`Gender\`, \`Picture_url\`) 
-                VALUES (NULL, ?, ?, ?, ?, ?, ?);`;
+                \`Email\`, \`Phone\`, \`Gender\`, \`Picture_url\`, \`Skills\`, \`Description\`) 
+                VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?);`;
   const params = [
     student.username,
     student.password,
@@ -102,6 +102,8 @@ async function createOne(student) {
     student.phone,
     student.gender,
     student.picture_url,
+    student.skills,
+    student.description
   ];
 
   return new Promise((resolve, reject) => {
@@ -121,7 +123,7 @@ async function createOne(student) {
 async function updateByID(id, student) {
 
   const query = `UPDATE \`student\` SET \`Username\` = ?, \`Password\` = ?, \`Email\` = ?,
-                \`Phone\` = ?, \`Gender\` = ?, \`Picture_url\` = ? WHERE \`student\`.\`Student_id\` = ?`;
+                \`Phone\` = ?, \`Gender\` = ?, \`Picture_url\` = ?, \`Skills\` = ?, \`Description\` = ? WHERE \`student\`.\`Student_id\` = ?`;
   const params = [
     student.username,
     student.password,
@@ -129,6 +131,8 @@ async function updateByID(id, student) {
     student.phone,
     student.gender,
     student.picture_url,
+    student.skills,
+    student.description,
     id
   ];
  
