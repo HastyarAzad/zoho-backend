@@ -1,11 +1,27 @@
 const validate_student = require("../validation/student.validation");
 const student_module = require("../modules/student_module");
-
+const job_module = require("../modules/job_module");
+const  fs = require("fs");
+const runPythonScript = require("../AI_stuff/run_script");
 
 // get all student api
 exports.getAll = async (req, res) => {
 
   const result = await student_module.getAll();
+
+  // let data = await student_module.getAll();
+  // let json_data = JSON.stringify(data);
+  // fs.writeFileSync("data.json", json_data);
+
+  // // Get the student data
+  // const student_data = await student_module.getAll();
+  // // store the student data in a json file inside the AI_stuff/data/job posts dataset folder
+  // fs.writeFileSync("./AI_stuff/data/job posts dataset/student_data.json", JSON.stringify(student_data));
+
+  // // Get the job data
+  // const job_data = await job_module.getAll();
+  // // store the job data in a json file inside the AI_stuff/data/job posts dataset folder
+  // fs.writeFileSync("./AI_stuff/data/job posts dataset/job_data.json", JSON.stringify(job_data));
 
   // console.log(result);
   res.send(result);
@@ -96,6 +112,9 @@ exports.createOne = async (req, res) => {
 
   console.log(`student created with id: ${result.insertId}`);
   res.send(result);
+  
+  // run the python script
+  runPythonScript.runPythonScript();
 };
 
 // update a student based on it's id 

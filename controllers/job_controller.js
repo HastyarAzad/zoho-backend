@@ -1,5 +1,6 @@
 const validate_job = require("../validation/job.validation");
 const job_module = require("../modules/job_module");
+const runPythonScript = require("../AI_stuff/run_script");
 
 
 // get all job api
@@ -122,6 +123,9 @@ exports.createOne = async (req, res) => {
 
   console.log(`job created with id: ${result.insertId}`);
   res.send(result);
+
+  runPythonScript.runPythonScript();
+
 };
 
 // update a job based on it's id 
