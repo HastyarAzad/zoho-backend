@@ -2,6 +2,7 @@ const validate_job = require("../validation/job.validation");
 const job_module = require("../modules/job_module");
 const runPythonScript = require("../AI_stuff/run_script");
 const fs = require('fs');
+const path = require('path');
 
 
 // get all job api
@@ -28,9 +29,11 @@ exports.getForStudent = async (req, res) => {
     res.status(404).send(error.details[0].message);
     return;
   }
+  const filePath = path.join('AI_stuff', 'data', 'output.json');
+  const data  = fs.readFileSync(filePath, 'utf8');
 
-  // read AI_stuff/data/output.json using fs module 
-  const data = fs.readFileSync('AI_stuff/data/output.json', 'utf8');
+  // // read AI_stuff/data/output.json using fs module 
+  // const data = fs.readFileSync('AI_stuff/data/output.json', 'utf8');
   // make the data into a json object
   const json_data = JSON.parse(data);
   
