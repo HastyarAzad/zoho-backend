@@ -41,6 +41,13 @@ exports.getForStudent = async (req, res) => {
   }
 
   console.log(job_ids.toString());
+  // check if job_ids is empty
+  if (job_ids.length === 0) {
+    console.log(`no jobs found for student with id: ${id}`);
+    const result = await job_module.getByLimit(20);
+    res.send(result);
+    return;
+  }
 
   // get all the jobs for that student from the database
   const result = await job_module.getByIds(job_ids.toString());

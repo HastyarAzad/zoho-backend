@@ -19,6 +19,24 @@ async function getAll() {
   });
 }
 
+async function getByLimit(limit) {
+
+  const query = `SELECT * FROM \`job\` LIMIT ${limit};`
+
+  return new Promise((resolve, reject) => {
+
+    db_connection.query(query, (err, result) => {
+      if (err) {
+        console.log(err);
+        resolve(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+
+}
+
 
 async function getById(id) {
 
@@ -171,6 +189,7 @@ async function updateByID(id, job) {
 
 module.exports.getAll = getAll;
 module.exports.getById = getById;
+module.exports.getByLimit = getByLimit;
 module.exports.getByCompanyId = getByCompanyId;
 module.exports.getByParams = getByParams;
 module.exports.getByIds = getByIds;
