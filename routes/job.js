@@ -6,6 +6,9 @@ const job_controller = require('../controllers/job_controller');
 // get all job api
 router.get("/jobs", job_controller.getAll);
 
+// get jobs for student api
+router.get("/jobs_for_student/:id", job_controller.getForStudent);
+
 // get a job by id api
 router.get("/job/:id", job_controller.getById);
 

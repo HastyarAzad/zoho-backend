@@ -1,16 +1,52 @@
 const validate_job = require("../validation/job.validation");
 const job_module = require("../modules/job_module");
 const runPythonScript = require("../AI_stuff/run_script");
+const fs = require('fs');
 
 
 // get all job api
 exports.getAll = async (req, res) => {
 
   const result = await job_module.getAll();
+  // runPythonScript.runPythonScript();
 
   // console.log(result);
   res.send(result);
 
+};
+
+// get jobs for student api
+exports.getForStudent = async (req, res) => {
+
+  const id = req.params.id;
+
+  // validate if id is correct
+  const {error} = validate_job.validate_user_id(id);
+
+  if (error) {
+    console.log(error.details[0].message);
+    res.status(404).send(error.details[0].message);
+    return;
+  }
+
+  // read AI_stuff/data/output.json using fs module 
+  const data = fs.readFileSync('AI_stuff/data/output.json', 'utf8');
+  // make the data into a json object
+  const json_data = JSON.parse(data);
+  
+  // loop through the json_data object properties and store all the values in an array
+  let job_ids = [];
+  for (let key in json_data[id]) {
+    job_ids.push(json_data[id][key]);
+  }
+
+  console.log(job_ids.toString());
+
+  // get all the jobs for that student from the database
+  const result = await job_module.getByIds(job_ids.toString());
+  // console.log(result);
+  console.log(`returned all jobs for student with id: ${id}`)
+  res.send(result);
 };
 
 // get a job by id api

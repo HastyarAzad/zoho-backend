@@ -17,6 +17,8 @@ exports.runPythonScript = async () => {
   fs.writeFileSync("./AI_stuff/data/job posts dataset/job_data.json", JSON.stringify(job_data));
 
 
+  console.log("Running Python script...");
+
   const pythonProcess = exec("python ./AI_stuff/script.py", (error, stdout, stderr) => {
     if (error) {
       console.error(`Error executing Python script: ${error.message}`);

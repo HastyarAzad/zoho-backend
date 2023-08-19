@@ -1,6 +1,4 @@
-import numpy as np
 import pandas as pd
-import uuid
 import os
 from tqdm import tqdm
 import gensim
@@ -8,11 +6,10 @@ from string import punctuation
 from nltk.tokenize import wordpunct_tokenize
 import logging
 import datetime
-import nltk 
-nltk.download('stopwords')
-from nltk.corpus import stopwords
+import nltk
 
-# ec948698
+nltk.download("stopwords")
+from nltk.corpus import stopwords
 
 # Set up the logging configuration
 logging.basicConfig(
@@ -36,197 +33,212 @@ try:
     logger.info("Loading job and student data...")
 
     # Define the paths for the input data files
-    data_folder = 'AI_stuff/data'
-    jobs_csv_path = os.path.join(data_folder, 'job posts dataset', 'data job posts.csv')
+    data_folder = "AI_stuff/data"
+    jobs_csv_path = os.path.join(data_folder, "job posts dataset", "job_data.json")
 
     # Read the job data from the CSV file
-    df_jobs = pd.read_csv(jobs_csv_path)
-    df_jobs = df_jobs[:300]
+    df_jobs = pd.read_json(jobs_csv_path)
 
-    students_csv_path = os.path.join(data_folder, 'job posts dataset', 'data job posts.csv')
+    students_csv_path = os.path.join(
+        data_folder, "job posts dataset", "student_data.json"
+    )
 
-    df_students = pd.read_csv(students_csv_path)
-    df_students = df_students[300:600]
-
-    # Drop unnecessary columns from job and student data
+    df_students = pd.read_json(students_csv_path)
+    # drop unnecessary columns
     df_jobs.drop(
         columns=[
-            "jobpost",
-            "date",
-            "Company",
-            "AnnouncementCode",
-            "Term",
-            "Eligibility",
-            "Audience",
-            "StartDate",
-            "Duration",
-            "Location",
-            "JobRequirment",
-            "RequiredQual",
-            "Salary",
-            "ApplicationP",
-            "OpeningDate",
-            "Deadline",
-            "Notes",
-            "AboutC",
-            "Attach",
-            "Year",
-            "Month",
-            "IT",
+            "Company_id",
+            "Type",
+            "Company_id",
+            "Type",
+            "Expiration",
+            "Department_id",
         ],
         inplace=True,
     )
     df_students.drop(
         columns=[
-            "jobpost",
-            "date",
-            "Company",
-            "AnnouncementCode",
-            "Term",
-            "Eligibility",
-            "Audience",
-            "StartDate",
-            "Duration",
-            "Location",
-            "JobRequirment",
-            "RequiredQual",
-            "Salary",
-            "ApplicationP",
-            "OpeningDate",
-            "Deadline",
-            "Notes",
-            "AboutC",
-            "Attach",
-            "Year",
-            "Month",
-            "IT",
+            "Username",
+            "Password",
+            "Email",
+            "Phone",
+            "Picture_url",
         ],
         inplace=True,
     )
 
-    # Rename columns in student data
-    df_students.rename(columns={"JobDescription": "Description"}, inplace=True)
-
-    # Generate random gender for job and student data
-    gender = np.random.choice(["male", "female"], size=len(df_jobs), p=[0.4, 0.6])
-    df_jobs["gender"] = gender
-
-    gender = np.random.choice(["male", "female"], size=len(df_students), p=[0.5, 0.5])
-    df_students["gender"] = gender
-
     # Drop rows with missing values
+    df_jobs.replace("", pd.NA, inplace=True)
+    df_students.replace("", pd.NA, inplace=True)
+
     df_jobs = df_jobs.dropna()
     df_students = df_students.dropna()
 
     # Reset index and add unique IDs to job and student data
     df_jobs.reset_index(inplace=True)
     df_students.reset_index(inplace=True)
+    df_jobs.drop(["index"], axis=1, inplace=True)
+    df_students.drop(["index"], axis=1, inplace=True)
 
-    df_jobs["ID"] = [str(uuid.uuid4()) for _ in range(len(df_jobs))]
+    # df_jobs["Job_id"] = [i for i in range(len(df_jobs))]
+    # Move the 'ID' column to the first position in the DataFrame
     cols = df_jobs.columns.tolist()
-    cols = ["ID"] + [col for col in cols if col != "ID"]
+    cols = (
+        ["Job_id"]
+        + ["Gender"]
+        + ["Skills"]
+        + ["Description"]
+        + [
+            col
+            for col in cols
+            if col not in ["Job_id", "Gender", "Skills", "Description"]
+        ]
+    )
     df_jobs = df_jobs[cols]
 
-    df_students["ID"] = [str(uuid.uuid4()) for _ in range(len(df_students))]
+    # df_students["Student_id"] = [i for i in range(len(df_students))]
+    # Move the 'ID' column to the first position in the DataFrame
     cols = df_students.columns.tolist()
-    cols = ["ID"] + [col for col in cols if col != "ID"]
+    cols = ["Student_id"] + [col for col in cols if col != "Student_id"]
     df_students = df_students[cols]
+    # Update 'Gender' column using a lambda function
+    df_jobs["Gender"] = df_jobs.apply(
+        lambda x: "Male Female" if x["Gender"] == "Any" else x["Gender"], axis=1
+    )
 
     # Preprocess text data in job and student data
     list_stopwords = set(stopwords.words("english") + list(punctuation))
 
-    df_students["title_list"] = df_students["Title"].str.lower().apply(wordpunct_tokenize)
+    df_students["skills_list"] = (
+        df_students["Skills"].str.lower().apply(wordpunct_tokenize)
+    )
     df_students["description"] = (
         df_students["Description"].str.lower().apply(wordpunct_tokenize)
     )
-    df_jobs["title_list"] = df_jobs["Title"].str.lower().apply(wordpunct_tokenize)
-    df_jobs["description"] = df_jobs["JobDescription"].str.lower().apply(wordpunct_tokenize)
+    df_students["Gender"] = df_students["Gender"].str.lower().apply(wordpunct_tokenize)
 
-    df_students["title_list"] = df_students["title_list"].apply(
+    df_jobs["skills_list"] = df_jobs["Skills"].str.lower().apply(wordpunct_tokenize)
+    df_jobs["description"] = (
+        df_jobs["Description"].str.lower().apply(wordpunct_tokenize)
+    )
+    df_jobs["Gender"] = df_jobs["Gender"].str.lower().apply(wordpunct_tokenize)
+
+    df_students["skills_list"] = df_students["skills_list"].apply(
         lambda x: [word for word in x if word not in list_stopwords]
     )
     df_students["description"] = df_students["description"].apply(
         lambda x: [word for word in x if word not in list_stopwords]
     )
-    df_students["title_list"] = df_students["title_list"].apply(
+    df_students["Gender"] = df_students["Gender"].apply(
+        lambda x: [word for word in x if word not in list_stopwords]
+    )
+
+    df_students["skills_list"] = df_students["skills_list"].apply(
         lambda x: [word for word in x if len(word) > 0]
     )
     df_students["description"] = df_students["description"].apply(
         lambda x: [word for word in x if len(word) > 0]
     )
-    df_jobs["title_list"] = df_jobs["title_list"].apply(
-        lambda x: [word for word in x if word not in list_stopwords]
-    )
-    df_jobs["description"] = df_jobs["description"].apply(
-        lambda x: [word for word in x if word not in list_stopwords]
-    )
-    df_jobs["title_list"] = df_jobs["title_list"].apply(
-        lambda x: [word for word in x if len(word) > 0]
-    )
-    df_jobs["description"] = df_jobs["description"].apply(
+    df_students["Gender"] = df_students["Gender"].apply(
         lambda x: [word for word in x if len(word) > 0]
     )
 
-    df_students["title_list"] = df_students["title_list"].apply(lambda x: list(set(x)))
-    df_students["description"] = df_students["description"].apply(lambda x: list(set(x)))
-    df_jobs["title_list"] = df_jobs["title_list"].apply(lambda x: list(set(x)))
+    df_jobs["skills_list"] = df_jobs["skills_list"].apply(
+        lambda x: [word for word in x if word not in list_stopwords]
+    )
+    df_jobs["description"] = df_jobs["description"].apply(
+        lambda x: [word for word in x if word not in list_stopwords]
+    )
+    df_jobs["Gender"] = df_jobs["Gender"].apply(
+        lambda x: [word for word in x if word not in list_stopwords]
+    )
+    df_jobs["skills_list"] = df_jobs["skills_list"].apply(
+        lambda x: [word for word in x if len(word) > 0]
+    )
+    df_jobs["description"] = df_jobs["description"].apply(
+        lambda x: [word for word in x if len(word) > 0]
+    )
+    df_jobs["Gender"] = df_jobs["Gender"].apply(
+        lambda x: [word for word in x if len(word) > 0]
+    )
+
+    df_students["skills_list"] = df_students["skills_list"].apply(
+        lambda x: list(set(x))
+    )
+    df_students["description"] = df_students["description"].apply(
+        lambda x: list(set(x))
+    )
+    df_students["Gender"] = df_students["Gender"].apply(lambda x: list(set(x)))
+
+    df_jobs["skills_list"] = df_jobs["skills_list"].apply(lambda x: list(set(x)))
     df_jobs["description"] = df_jobs["description"].apply(lambda x: list(set(x)))
+    df_jobs["Gender"] = df_jobs["Gender"].apply(lambda x: list(set(x)))
 
     # Load Word2Vec model
     logger.info("Loading Word2Vec model...")
     wv = gensim.models.KeyedVectors.load_word2vec_format(
-        "AI_stuff\data\googlenewsvectorsnegative300\GoogleNews-vectors-negative300.bin", binary=True
+        "AI_stuff\data\googlenewsvectorsnegative300\GoogleNews-vectors-negative300.bin",
+        binary=True,
     )
-
-    # Create matrix of vocabulary for jobs
+    # vectoring
+    # Create an empty list to hold the modified data
     matrix_jobs_vocab = []
     for list_ in df_jobs.to_numpy():
-        list_[4] = [word for word in list_[4] if word in wv.key_to_index]
-        list_[5] = [word for word in list_[5] if word in wv.key_to_index]
-        matrix_jobs_vocab.append(list_)
+        list_[1] = [word for word in list_[1] if word in wv.key_to_index] * 1
+        list_[5] = [word for word in list_[5] if word in wv.key_to_index] * 1
+        list_[6] = [word for word in list_[6] if word in wv.key_to_index] * 1
 
-    # Create matrix of vocabulary for students
+        # Concatenate columns 1, 5, and 6 into a single string
+        soup = list_[1] + list_[5] + list_[6]
+
+        # Append 'ID' and the soup to the modified list
+        modified_list = [list_[0], soup]
+        matrix_jobs_vocab.append(modified_list)
+
+    # Create an empty list to hold the modified data
     matrix_students_vocab = []
+
     for list_ in df_students.to_numpy():
-        list_[4] = [word for word in list_[4] if word in wv.key_to_index]
-        list_[5] = [word for word in list_[5] if word in wv.key_to_index]
-        matrix_students_vocab.append(list_)
+        list_[1] = [word for word in list_[1] if word in wv.key_to_index] * 1
+        list_[4] = [word for word in list_[4] if word in wv.key_to_index] * 1
+        list_[5] = [word for word in list_[5] if word in wv.key_to_index] * 1
 
+        # Concatenate columns 1, 6, and 7 into a single string
+        soup = list_[1] + list_[4] + list_[5]
 
-    # Generate similarity matrix
+        # Append 'ID' and the soup to the modified list
+        modified_list = [list_[0], soup]
+        matrix_students_vocab.append(modified_list)
+
+    # generate matrix
     def generate_similarity_matrix():
-        logger.info("Generating similarity matrix...")
-
         matrix_similarity = {}
 
         pbar = tqdm(matrix_students_vocab)
         for row1 in pbar:
-            title_list1 = row1[4]
-            description1 = row1[5]
-            if not title_list1 or not description1:
+            soup1 = row1[1]
+            if not soup1:
                 # Skip rows without a valid title or description
-                logger.warning(f"Row ID {row1[0]} has missing title_list or description.")
+                print(f"{row1[0]}\t{soup1}")
                 continue
 
             similarities = []
             for row2 in matrix_jobs_vocab:
-                title_list2 = row2[4]
-                description2 = row2[5]
-                if not title_list2 or not description2:
+                soup2 = row2[1]
+                if not soup2:
                     # Skip rows without a valid title or description
-                    logger.warning(
-                        f"Row ID {row2[0]} has missing title_list or description."
-                    )
+                    print(f"{row2[0]}\t{soup2}")
                     continue
 
-                score_title = wv.n_similarity(title_list1, title_list2)
-                score_desc = wv.n_similarity(description1, description2)
-                final_score = score_title + score_desc
+                final_score = wv.n_similarity(soup1, soup2)
 
                 similarities.append((row2[0], final_score))
 
             similarities.sort(key=lambda x: x[1], reverse=True)
-            top_similar_ids = [similarity[0] for similarity in similarities[:10]]
+            # Sort by final score in descending order
+            top_similarities = similarities[:20]  # Get top 20 most similar titles
+            # Get the top 20 most similar IDs
+            top_similar_ids = [similarity[0] for similarity in similarities[:20]]
 
             matrix_similarity[row1[0]] = top_similar_ids
 
@@ -240,10 +252,7 @@ try:
             json_file.write(json_string)
 
         pbar.close()
-        logger.info("Similarity matrix generation completed.")
-
-        return "generation completed"
-
+        return "generation complete"
 
     # Call the similarity matrix generation function
     generate_similarity_matrix()
@@ -272,4 +281,4 @@ finally:
     logger.info(f"Total time taken: {total_time}")
 
     # Log the end of the script
-    logger.info("Script finished.")
+    logger.info("Script finished.")
