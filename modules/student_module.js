@@ -1,11 +1,9 @@
-const db_connection = require('../config/db.config');
+const db_connection = require("../config/db.config");
 
 async function getAll() {
-
-  const query = "SELECT * FROM student;"
+  const query = "SELECT * FROM student;";
 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, (err, result) => {
       if (err) {
         console.log(err);
@@ -17,14 +15,11 @@ async function getAll() {
   });
 }
 
-
 async function getById(id) {
-
-  const query = `SELECT * FROM \`student\` WHERE \`Student_id\` = ? ;`
+  const query = `SELECT * FROM \`student\` WHERE \`Student_id\` = ? ;`;
   const params = [id];
 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -37,12 +32,10 @@ async function getById(id) {
 }
 
 async function getByEmail(email) {
-
-  const query = `SELECT * FROM \`student\` WHERE \`Email\` = ? ;`
+  const query = `SELECT * FROM \`student\` WHERE \`Email\` = ? ;`;
   const params = [email];
 
   return new Promise((resolve, reject) => {
-
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -56,12 +49,10 @@ async function getByEmail(email) {
 
 // check if the email and password are correct
 async function login(email, password) {
-
-  const query = `SELECT * FROM \`student\` WHERE \`Email\` = ? AND \`Password\` = ?;`
+  const query = `SELECT * FROM \`student\` WHERE \`Email\` = ? AND \`Password\` = ?;`;
   const params = [email, password];
 
   return new Promise((resolve, reject) => {
-
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -73,41 +64,42 @@ async function login(email, password) {
   });
 }
 
-async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
+async function getByIds(ids) {
+  // Ensure ids is an array and has elements
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return []; // Return an empty array if no ids are provided
+  }
 
-  const query = `SELECT * FROM \`student\` WHERE \`Student_id\` in (${ids});`
+  // Use placeholders for the SQL query
+  const placeholders = ids.map(() => "?").join(",");
+  const query = `SELECT * FROM \`student\` WHERE \`Student_id\` IN (${placeholders})`;
 
   return new Promise((resolve, reject) => {
-    
-    db_connection.query(query, (err, result) => {
+    db_connection.query(query, ids, (err, result) => {
       if (err) {
         console.log(err);
-        resolve(err);
+        reject(err); // Reject the promise on error
       } else {
-        resolve(result);
+        resolve(result); // Resolve with the result
       }
     });
   });
 }
 
 async function createOne(student) {
-
   const query = `INSERT INTO \`student\` (\`Student_id\`, \`Username\`, \`Password\`,
-                \`Email\`, \`Phone\`, \`Gender\`, \`Picture_url\`, \`Skills\`, \`Description\`) 
-                VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?);`;
+                \`Email\`, \`Phone\`, \`Picture_url\`) 
+                VALUES (NULL, ?, ?, ?, ?, ?);`;
   const params = [
     student.username,
     student.password,
     student.email,
     student.phone,
-    student.gender,
     student.picture_url,
-    student.skills,
-    student.description
+    student.description,
   ];
 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -119,9 +111,7 @@ async function createOne(student) {
   });
 }
 
-
 async function updateByID(id, student) {
-
   const query = `UPDATE \`student\` SET \`Username\` = ?, \`Password\` = ?, \`Email\` = ?,
                 \`Phone\` = ?, \`Gender\` = ?, \`Picture_url\` = ?, \`Skills\` = ?, \`Description\` = ? WHERE \`student\`.\`Student_id\` = ?`;
   const params = [
@@ -133,11 +123,10 @@ async function updateByID(id, student) {
     student.picture_url,
     student.skills,
     student.description,
-    id
+    id,
   ];
- 
+
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -155,7 +144,7 @@ async function updateByID(id, student) {
 //   const params = [1,id];
 
 //   return new Promise((resolve, reject) => {
-    
+
 //     db_connection.query(query, params, (err, result) => {
 //       if (err) {
 //         console.log(err);

@@ -1,13 +1,10 @@
-
-
-const db_connection = require('../config/db.config');
+//company module
+const db_connection = require("../config/db.config");
 
 async function getAll() {
-
-  const query = "SELECT * FROM company;"
+  const query = "SELECT * FROM company;";
 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, (err, result) => {
       if (err) {
         console.log(err);
@@ -19,14 +16,11 @@ async function getAll() {
   });
 }
 
-
 async function getById(id) {
-
-  const query = `SELECT * FROM \`company\` WHERE \`Company_id\` = ? ;`
+  const query = `SELECT * FROM \`company\` WHERE \`company_id\` = ? ;`;
   const params = [id];
 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -39,30 +33,33 @@ async function getById(id) {
 }
 
 // get companies by ids
-async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
+async function getByIds(ids) {
+  // Ensure ids is an array and has elements
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return []; // Return an empty array if no ids are provided
+  }
 
-  const query = `SELECT * FROM \`company\` WHERE \`Company_id\` in (${ids});`
+  // Use placeholders for the SQL query
+  const placeholders = ids.map(() => "?").join(",");
+  const query = `SELECT * FROM \`company\` WHERE \`company_id\` IN (${placeholders})`;
 
   return new Promise((resolve, reject) => {
-
-    db_connection.query(query, (err, result) => {
+    db_connection.query(query, ids, (err, result) => {
       if (err) {
         console.log(err);
-        resolve(err);
+        reject(err); // Reject the promise on error
       } else {
-        resolve(result);
+        resolve(result); // Resolve with the result
       }
     });
   });
 }
 
 async function getByEmail(email) {
-
-  const query = `SELECT * FROM \`company\` WHERE \`Email\` = ? ;`
+  const query = `SELECT * FROM \`company\` WHERE \`Email\` = ? ;`;
   const params = [email];
 
   return new Promise((resolve, reject) => {
-
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -76,12 +73,10 @@ async function getByEmail(email) {
 
 // check if the email and password are correct
 async function login(email, password) {
-
-  const query = `SELECT * FROM \`company\` WHERE \`Email\` = ? AND \`Password\` = ?;`
+  const query = `SELECT * FROM \`company\` WHERE \`Email\` = ? AND \`Password\` = ?;`;
   const params = [email, password];
 
   return new Promise((resolve, reject) => {
-
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -93,12 +88,12 @@ async function login(email, password) {
   });
 }
 
-async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
+async function getByIds(ids) {
+  // ids must be like   1,2,3,6,8,5,12
 
-  const query = `SELECT * FROM \`company\` WHERE \`Company_id\` in (${ids});`
+  const query = `SELECT * FROM \`company\` WHERE \`company_id\` in (${ids});`;
 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, (err, result) => {
       if (err) {
         console.log(err);
@@ -111,8 +106,7 @@ async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
 }
 
 async function createOne(company) {
-
-  const query = `INSERT INTO \`company\` (\`Company_id\`, \`Username\`, \`Password\`,
+  const query = `INSERT INTO \`company\` (\`company_id\`, \`Username\`, \`Password\`,
                 \`Email\`, \`Phone\`, \`Address\`, \`Logo\`, \`description\`) 
                 VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);`;
   const params = [
@@ -122,11 +116,10 @@ async function createOne(company) {
     company.phone,
     company.address,
     company.logo,
-    company.description
+    company.description,
   ];
 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -138,11 +131,9 @@ async function createOne(company) {
   });
 }
 
-
 async function updateByID(id, company) {
-
   const query = `UPDATE \`company\` SET \`Username\` = ?, \`Password\` = ?, \`Email\` = ?,
-                \`Phone\` = ?, \`Address\` = ?, \`Logo\` = ?, \`Description\` = ? WHERE \`company\`.\`Company_id\` = ?`;
+                \`Phone\` = ?, \`Address\` = ?, \`Logo\` = ?, \`Description\` = ? WHERE \`company\`.\`company_id\` = ?`;
   const params = [
     company.username,
     company.password,
@@ -151,11 +142,10 @@ async function updateByID(id, company) {
     company.address,
     company.logo,
     company.description,
-    id
+    id,
   ];
- 
+
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -173,7 +163,7 @@ async function updateByID(id, company) {
 //   const params = [1,id];
 
 //   return new Promise((resolve, reject) => {
-    
+
 //     db_connection.query(query, params, (err, result) => {
 //       if (err) {
 //         console.log(err);

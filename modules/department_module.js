@@ -1,13 +1,9 @@
-
-
-const db_connection = require('../config/db.config');
+const db_connection = require("../config/db.config");
 
 async function getAll() {
-
-  const query = "SELECT * FROM department;"
+  const query = "SELECT * FROM department;";
 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, (err, result) => {
       if (err) {
         console.log(err);
@@ -19,14 +15,11 @@ async function getAll() {
   });
 }
 
-
 async function getById(id) {
-
-  const query = `SELECT * FROM \`department\` WHERE \`Department_id\` = ? ;`
+  const query = `SELECT * FROM \`department\` WHERE \`department_id\` = ? ;`;
   const params = [id];
 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -38,13 +31,12 @@ async function getById(id) {
   });
 }
 
+async function getByIds(ids) {
+  // ids must be like   1,2,3,6,8,5,12
 
-async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
-
-  const query = `SELECT * FROM \`department\` WHERE \`Department_id\` in (${ids});`
+  const query = `SELECT * FROM \`department\` WHERE \`department_id\` in (${ids});`;
 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, (err, result) => {
       if (err) {
         console.log(err);
@@ -57,15 +49,11 @@ async function getByIds(ids) { // ids must be like   1,2,3,6,8,5,12
 }
 
 async function createOne(department) {
-
-  const query = `INSERT INTO \`department\` (\`Department_id\`, \`Name\`) 
+  const query = `INSERT INTO \`department\` (\`department_id\`, \`name\`) 
                 VALUES (NULL, ? );`;
-  const params = [
-    department.name,
-  ];
+  const params = [department.name];
 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -77,17 +65,11 @@ async function createOne(department) {
   });
 }
 
-
 async function updateByID(id, department) {
+  const query = `UPDATE \`department\` SET \`name\` = ? WHERE \`department\`.\`department_id\` = ?`;
+  const params = [department.name, id];
 
-  const query = `UPDATE \`department\` SET \`Name\` = ? WHERE \`department\`.\`Department_id\` = ?`;
-  const params = [
-    department.name,
-    id
-  ];
- 
   return new Promise((resolve, reject) => {
-    
     db_connection.query(query, params, (err, result) => {
       if (err) {
         console.log(err);
@@ -105,7 +87,7 @@ async function updateByID(id, department) {
 //   const params = [1,id];
 
 //   return new Promise((resolve, reject) => {
-    
+
 //     db_connection.query(query, params, (err, result) => {
 //       if (err) {
 //         console.log(err);

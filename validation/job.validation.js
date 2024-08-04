@@ -1,7 +1,7 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 // to validate the user's object
-function validate_user_object(user){
+function validate_user_object(user) {
   // creating a schema for the user object
   const schema = Joi.object({
     title: Joi.string().min(3).max(35).required(),
@@ -11,7 +11,7 @@ function validate_user_object(user){
     gender: Joi.string().min(3).max(35).required(),
     expiration: Joi.string().min(3).max(35).required(),
     department_id: Joi.number().required().min(0),
-    skills: Joi.string().min(0).max(500).required(),
+    // skills: Joi.string().min(0).max(500).required(),
   });
 
   //validating the request body and returning the result
@@ -19,7 +19,7 @@ function validate_user_object(user){
 }
 
 // to validate the user's id
-function validate_user_id(id){
+function validate_user_id(id) {
   // creating a schema for the user
   const schema = Joi.object({
     id: Joi.number().required().min(0),
@@ -29,7 +29,7 @@ function validate_user_id(id){
   return schema.validate({ id: id });
 }
 
-function validate_user_password(password){
+function validate_user_password(password) {
   // creating a schema for the user
   const schema = Joi.object({
     password: Joi.string().min(8).max(35).required(),

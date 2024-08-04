@@ -1,22 +1,11 @@
 const mysql2 = require("mysql2");
 
-// var mysqlHost = process.env.MYSQL_HOST;
-// var mysqlPort = process.env.MYSQL_PORT;
-// var mysqlUser = process.env.MYSQL_USER;
-// var mysqlPass = process.env.MYSQL_PASS;
-// var mysqlDB = process.env.MYSQL_DB;
-
-// var mysqlHost = process.env.MYSQL_HOST || '52.20.124.191';
-// var mysqlPort = process.env.MYSQL_PORT || '3306';
-// var mysqlUser = process.env.MYSQL_USER || 'hastyar';
-// var mysqlPass = process.env.MYSQL_PASS || 'Kashakeel123!!';
-// var mysqlDB = process.env.MYSQL_DB || 'zoho';
-
-var mysqlHost = process.env.MYSQL_HOST || 'localhost';
-var mysqlPort = process.env.MYSQL_PORT || '3306';
-var mysqlUser = process.env.MYSQL_USER || 'hastyar';
-var mysqlPass = process.env.MYSQL_PASS || 'Kashakeel123!!';
-var mysqlDB = process.env.MYSQL_DB || 'zoho';
+// Updated credentials
+var mysqlHost = process.env.DB_HOST || "127.0.0.1";
+var mysqlPort = process.env.DB_PORT || "3306";
+var mysqlUser = process.env.DB_USER || "root";
+var mysqlPass = process.env.DB_PASSWORD || "Rozhagamer1";
+var mysqlDB = process.env.DB_NAME || "job_application_system";
 
 // creating a config variable
 const connectionOptions = {
@@ -24,7 +13,7 @@ const connectionOptions = {
   port: mysqlPort,
   user: mysqlUser,
   password: mysqlPass,
-  database: mysqlDB
+  database: mysqlDB,
 };
 
 var db = mysql2.createPool(connectionOptions);
